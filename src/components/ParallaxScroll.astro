@@ -65,35 +65,37 @@
 
       // Create transition overlay FROM previous section
       if (index > 0) {
-        const prevSection = sections[index - 1];
-        
-        // Create overlay div dengan warna section SEBELUMNYA
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.pointerEvents = 'none';
-        overlay.style.zIndex = '0';
-        overlay.style.backgroundColor = prevSection.bgColor; // Warna SEBELUMNYA
-        overlay.style.opacity = '1'; // Mulai dengan opacity 1
-        el.style.position = 'relative';
-        el.insertBefore(overlay, el.firstChild);
+        const isMobile = window.innerWidth <= 768;
 
-        // Fade out overlay (reveal warna asli section) - lebih gradual
-        gsap.to(overlay, {
-          opacity: 0,
-          ease: 'power1.inOut',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 90%',
-            end: 'top 20%',
-            scrub: 3,
-          },
-        });
+        if (!isMobile) {
+          // Desktop only: overlay fade transition
+          const prevSection = sections[index - 1];
+          const overlay = document.createElement('div');
+          overlay.style.position = 'absolute';
+          overlay.style.top = '0';
+          overlay.style.left = '0';
+          overlay.style.width = '100%';
+          overlay.style.height = '100%';
+          overlay.style.pointerEvents = 'none';
+          overlay.style.zIndex = '0';
+          overlay.style.backgroundColor = prevSection.bgColor;
+          overlay.style.opacity = '1';
+          el.style.position = 'relative';
+          el.insertBefore(overlay, el.firstChild);
 
-        // Change text colors smoothly
+          gsap.to(overlay, {
+            opacity: 0,
+            ease: 'power1.inOut',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 90%',
+              end: 'top 20%',
+              scrub: 1,
+            },
+          });
+        }
+
+        // Change text + bg colors smoothly (all devices)
         ScrollTrigger.create({
           trigger: el,
           start: 'top 70%',
