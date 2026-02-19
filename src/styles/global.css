@@ -67,6 +67,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden; /* Block horizontal scroll at viewport level */
+  /* Prevent iOS rubber-band overscroll from exposing black html background */
+  overscroll-behavior-y: none;
 }
 
 html.lenis {
@@ -439,6 +441,15 @@ footer {
   #services { background-color: #FFFFFF !important; }
   #studio   { background-color: #000000 !important; }
   #contact  { background-color: #FFFFFF !important; }
+
+  /* Ensure each section is a self-contained paint layer on iOS Safari.
+     translate3d promotes to GPU layer and isolates backgrounds. */
+  #home, #services, #studio, #contact {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    isolation: isolate;
+    z-index: auto;
+  }
 
   /* Kill all background transitions on mobile sections */
   .section-dark,
