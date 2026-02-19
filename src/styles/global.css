@@ -92,7 +92,6 @@ html.lenis.lenis-scrolling iframe {
 body {
   overflow-x: hidden;
   line-height: 1.6;
-  will-change: scroll-position;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -234,14 +233,14 @@ footer {
   padding-bottom: 160px;
   position: relative;
   z-index: 1;
-  background: transparent;
-  transition: background-color 1.2s ease;
-  overflow: hidden;
 }
 
-.section-pad > * {
-  position: relative;
-  z-index: 1;
+/* Desktop only: elevate content above overlay divs injected by JS */
+@media (min-width: 769px) {
+  .section-pad > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 /* Section color themes */
@@ -429,6 +428,22 @@ footer {
     padding-top: 96px;
     padding-bottom: 64px;
     scroll-margin-top: 80px;
+    /* No overflow:hidden on mobile — prevents iOS Safari stacking context issues */
+    overflow: visible;
+    /* No transitions on mobile — instant color, no flash */
+    transition: none !important;
+  }
+
+  /* Hard-coded backgrounds per section ID — never rely on JS class toggling */
+  #home     { background-color: #000000 !important; }
+  #services { background-color: #FFFFFF !important; }
+  #studio   { background-color: #000000 !important; }
+  #contact  { background-color: #FFFFFF !important; }
+
+  /* Kill all background transitions on mobile sections */
+  .section-dark,
+  .section-light {
+    transition: none !important;
   }
 }
 
@@ -552,15 +567,17 @@ footer {
   transform: translateY(-4px);
 }
 
-/* Parallax performance optimizations */
-[data-speed] {
-  will-change: transform;
-}
+/* Parallax performance optimizations — desktop only to avoid iOS Safari GPU layer issues */
+@media (min-width: 769px) {
+  [data-speed] {
+    will-change: transform;
+  }
 
-.hero-section,
-.hero-headline,
-.hero-description {
-  will-change: transform;
+  .hero-section,
+  .hero-headline,
+  .hero-description {
+    will-change: transform;
+  }
 }
 
 /* Scrollbar */
