@@ -1,0 +1,325 @@
+---
+// Footer
+---
+
+<footer class="footer">
+  <div class="container-znatic">
+
+    <!-- Top row -->
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#home" class="footer-logo" data-scroll="home">
+          <img src="/logo_znatic.svg" alt="ZNATIC" width="200" height="52" />
+        </a>
+        <p class="footer-tagline">
+          Premium digital studio crafting exceptional<br />
+          design and technology experiences.
+        </p>
+        <div class="footer-social">
+          <!-- Instagram -->
+          <a href="https://instagram.com/znatic.id" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="17.5" cy="6.5" r="0.75" fill="currentColor"/>
+            </svg>
+          </a>
+          <!-- LinkedIn -->
+          <a href="https://linkedin.com/company/znatic" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 10v7M7 7v.5M12 10v7M12 13a3 3 0 016 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <!-- Dribbble -->
+          <a href="https://dribbble.com/znatic" target="_blank" rel="noopener" class="social-link" aria-label="Dribbble">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 4.5C9 8 11 10 15 10.5M4.5 13c3 .5 6 .5 8-1M12 2c1 5 2.5 9 5.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <!-- WhatsApp -->
+          <a href="https://wa.me/6282220572148" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.06L2 22l5.06-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M9.5 10.2c.1-.4.4-.9.7-1 .3-.1.5 0 .7.3l.6 1.3c.1.3 0 .5-.2.7l-.3.3c.4.7 1 1.3 1.7 1.7l.3-.3c.2-.2.4-.3.7-.2l1.3.6c.3.2.4.4.3.7-.1.3-.6.6-1 .7C12.1 15.8 9.3 13 9.5 10.2z" fill="currentColor"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-group-label">Navigation</h4>
+        <ul>
+          <li><a href="#home"     data-scroll="home">Home</a></li>
+          <li><a href="#services" data-scroll="services">Services</a></li>
+          <li><a href="#studio"   data-scroll="studio">Studio</a></li>
+          <li><a href="#contact"  data-scroll="contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-group-label">Services</h4>
+        <ul>
+          <li>UI/UX Design</li>
+          <li>Web Development</li>
+          <li>Product Design</li>
+          <li>Digital Experience</li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-group-label">Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@znatic.id">hello@znatic.id</a></li>
+          <li>Remote — Worldwide</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="footer-divider"></div>
+
+    <!-- Bottom row -->
+    <div class="footer-bottom">
+      <span class="footer-copy">
+        &copy; 2025–2026 ZNATIC. All rights reserved.
+      </span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-top: 80px;
+    padding-bottom: 40px;
+    border-top: 1px solid var(--color-border-soft);
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+
+  @media (max-width: 900px) {
+    .footer-top {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer {
+      padding-top: 48px;
+      padding-bottom: 32px;
+    }
+    .footer-top {
+      margin-bottom: 36px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer {
+      padding-top: 40px;
+      padding-bottom: 24px;
+    }
+    .footer-top {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+    /* Hide Services on mobile — redundant */
+    .footer-links-group:nth-child(3) {
+      display: none;
+    }
+    /* Compact brand tagline */
+    .footer-tagline {
+      font-size: 0.8rem;
+      margin-bottom: 16px;
+    }
+    .footer-tagline br {
+      display: none;
+    }
+    .footer-logo img {
+      max-height: 36px;
+    }
+    .footer-logo {
+      margin-bottom: 10px;
+    }
+    .footer-links-group h4.footer-group-label {
+      margin-bottom: 12px;
+    }
+    .footer-links-group ul {
+      gap: 8px;
+    }
+  }
+
+  /* Brand */
+  .footer-logo {
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .footer-logo img {
+    height: auto;
+    width: auto;
+    max-height: 52px;
+    filter: brightness(0) invert(1);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .footer-logo:hover img { opacity: 1; }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    max-width: 36ch;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social-link {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .social-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0);
+    transition: transform 0.5s ease;
+  }
+
+  .social-link:hover {
+    color: var(--color-gold);
+    transform: translateY(-3px);
+  }
+
+  .social-link:hover::before {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+
+  /* Link groups */
+  .footer-links-group h4.footer-group-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+  }
+
+  .footer-links-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links-group ul li,
+  .footer-links-group ul li a {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .footer-links-group ul li a:hover {
+    color: var(--color-gold);
+  }
+
+  /* Divider */
+  .footer-divider {
+    height: 1px;
+    background-color: var(--color-border-soft);
+    margin-bottom: 32px;
+  }
+
+  /* Bottom */
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-bottom-links a {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+  }
+
+  .footer-bottom-links a:hover {
+    color: var(--color-gold);
+  }
+</style>
+
+<script>
+  // Footer smooth scroll links
+  document.querySelectorAll<HTMLAnchorElement>('.footer [data-scroll], .footer-logo').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const attr = link.getAttribute('data-scroll') || 'home';
+      const el = document.getElementById(attr);
+      if (!el) return;
+      const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      let start: number | null = null;
+      function ease(t: number) { return 1 - Math.pow(1 - t, 5); }
+      function step(ts: number) {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / 900, 1);
+        window.scrollTo(0, startY + distance * ease(p));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  });
+</script>

@@ -1,0 +1,97 @@
+---
+// Page Load Transition
+---
+
+<div id="page-loader">
+  <div id="loader-inner">
+    <img id="loader-logo" src="/logo_znatic.svg" alt="ZNATIC" />
+    <div id="loader-track">
+      <div id="loader-fill"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 99999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  #page-loader.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  #loader-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  #loader-logo {
+    width: 120px;
+    height: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  #loader-track {
+    width: 180px;
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.3s forwards;
+  }
+
+  #loader-fill {
+    height: 100%;
+    width: 0;
+    background: #fff;
+    border-radius: 2px;
+    animation: fill 1.4s ease-in-out 0.4s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fill {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    #loader-logo { width: 96px; }
+    #loader-track { width: 140px; }
+  }
+
+  @media (max-width: 480px) {
+    #loader-logo { width: 80px; }
+    #loader-track { width: 120px; }
+  }
+</style>
+
+<script is:inline>
+  setTimeout(function() {
+    var el = document.getElementById('page-loader');
+    if (el) el.classList.add('done');
+  }, 1800);
+</script>

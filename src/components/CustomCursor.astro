@@ -1,0 +1,171 @@
+---
+// Custom Cursor Follower
+---
+
+<div class="cursor-dot" data-cursor-dot></div>
+<div class="cursor-outline" data-cursor-outline></div>
+
+<style>
+  .cursor-dot,
+  .cursor-outline {
+    pointer-events: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.15s ease-out;
+    z-index: 10000;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary);
+    z-index: 10001;
+    transition: background-color 0.3s ease;
+  }
+
+  .cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-primary);
+    opacity: 0.5;
+    transition: border-color 0.3s ease;
+  }
+
+  /* Cursor color for light sections */
+  body.cursor-on-light .cursor-dot {
+    background-color: #000000;
+  }
+
+  body.cursor-on-light .cursor-outline {
+    border-color: #000000;
+  }
+
+  /* Cursor color for dark sections */
+  body.cursor-on-dark .cursor-dot {
+    background-color: #FFFFFF;
+  }
+
+  body.cursor-on-dark .cursor-outline {
+    border-color: #FFFFFF;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cursor-dot,
+    .cursor-outline {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cursor-dot,
+    .cursor-outline {
+      display: none;
+    }
+  }
+
+  /* Cursor hover states */
+  body.cursor-hover .cursor-dot {
+    transform: translate(-50%, -50%) scale(2);
+  }
+
+  body.cursor-hover .cursor-outline {
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+</style>
+
+<script>
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const dot = document.querySelector<HTMLElement>('[data-cursor-dot]');
+    const outline = document.querySelector<HTMLElement>('[data-cursor-outline]');
+
+    if (dot && outline) {
+      let mouseX = 0;
+      let mouseY = 0;
+      let outlineX = 0;
+      let outlineY = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        dot.style.left = `${mouseX}px`;
+        dot.style.top = `${mouseY}px`;
+      });
+
+      // Smooth follow for outline
+      function animate() {
+        const distX = mouseX - outlineX;
+        const distY = mouseY - outlineY;
+
+        outlineX += distX * 0.15;
+        outlineY += distY * 0.15;
+
+        outline.style.left = `${outlineX}px`;
+        outline.style.top = `${outlineY}px`;
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // Hover states
+      const hoverElements = document.querySelectorAll('a, button, .btn-gold, .btn-ghost, .svc-card, .znatic-card');
+
+      hoverElements.forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          document.body.classList.add('cursor-hover');
+        });
+
+        el.addEventListener('mouseleave', () => {
+          document.body.classList.remove('cursor-hover');
+        });
+      });
+
+      // Detect section color and change cursor
+      function updateCursorColor() {
+        const scrollY = window.scrollY + window.innerHeight / 2;
+        
+        const sections = [
+          { id: 'home', isDark: true },
+          { id: 'services', isDark: false },
+          { id: 'studio', isDark: true },
+          { id: 'contact', isDark: false },
+        ];
+
+        let currentSection = sections[0];
+        
+        for (const section of sections) {
+          const el = document.getElementById(section.id);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            const top = rect.top + window.scrollY;
+            const bottom = top + el.offsetHeight;
+            
+            if (scrollY >= top && scrollY <= bottom) {
+              currentSection = section;
+              break;
+            }
+          }
+        }
+
+        // Update body class
+        if (currentSection.isDark) {
+          document.body.classList.add('cursor-on-dark');
+          document.body.classList.remove('cursor-on-light');
+        } else {
+          document.body.classList.add('cursor-on-light');
+          document.body.classList.remove('cursor-on-dark');
+        }
+      }
+
+      // Initial update
+      updateCursorColor();
+
+      // Update on scroll
+      window.addEventListener('scroll', updateCursorColor, { passive: true });
+    }
+  }
+</script>

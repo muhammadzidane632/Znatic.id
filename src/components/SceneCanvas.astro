@@ -1,0 +1,385 @@
+---
+// SceneCanvas — Scroll-driven doodle & abstract shape layer
+---
+
+<!-- Fixed canvas that sits behind all content -->
+<canvas id="scene-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #scene-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const canvas = document.getElementById('scene-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  // ── Resize ──────────────────────────────────────────────
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── Color palette per section ────────────────────────────
+  // Each section defines a "scene" with bg color + accent tones
+  const scenes = [
+    // HERO
+    {
+      bg: [0, 0, 0],           // #000000
+      accent1: [255, 255, 255],
+      accent2: [40, 40, 40],
+    },
+    // SERVICES
+    {
+      bg: [0, 0, 0],           // #000000 - black
+      accent1: [255, 255, 255], // white
+      accent2: [60, 60, 60],   // dark gray
+    },
+    // STUDIO
+    {
+      bg: [0, 0, 0],           // #000000 - black
+      accent1: [255, 255, 255], // white
+      accent2: [80, 80, 80],   // gray
+    },
+    // CONTACT
+    {
+      bg: [0, 0, 0],           // #000000 - black
+      accent1: [255, 255, 255], // white
+      accent2: [50, 50, 50],   // dark gray
+    },
+  ];
+
+  // ── Scroll progress tracker ──────────────────────────────
+  let scrollProgress = 0; // 0 → 1 over entire page
+
+  // ── Doodle shapes definition ─────────────────────────────
+  // We pre-define control points for multiple organic shapes
+  // Each shape has phases that evolve with scroll
+
+  type DoodleShape = {
+    x: number; y: number;        // relative 0-1 position
+    baseR: number;
+    growFactor: number;
+    phase: number;               // animation offset
+    speed: number;               // drift speed
+    opacity: number;
+    lineWidth: number;
+    rotSpeed: number;
+    type: 'circle' | 'squiggle' | 'blob' | 'cross' | 'arc';
+    color: number;               // 0 → accent1, 1 → accent2
+  };
+
+  const shapes: DoodleShape[] = [
+    // HERO - subtle minimal shapes
+    { x: 0.82, y: 0.15, baseR: 40,  growFactor: 220, phase: 0,     speed: 0.18, opacity: 0.12, lineWidth: 1,   rotSpeed: 0.003, type: 'circle',   color: 0 },
+    { x: 0.08, y: 0.72, baseR: 25,  growFactor: 120, phase: 1.2,   speed: 0.12, opacity: 0.08, lineWidth: 1,   rotSpeed: -0.002, type: 'arc',     color: 0 },
+    { x: 0.65, y: 0.88, baseR: 15,  growFactor: 60,  phase: 2.5,   speed: 0.22, opacity: 0.07, lineWidth: 0.8, rotSpeed: 0.004,  type: 'cross',   color: 0 },
+
+    // SERVICES - cyan, energetic
+    { x: 0.12, y: 0.35, baseR: 30,  growFactor: 180, phase: 0.8,   speed: 0.15, opacity: 0.18, lineWidth: 1.2, rotSpeed: 0.002,  type: 'blob',    color: 0 },
+    { x: 0.88, y: 0.55, baseR: 50,  growFactor: 200, phase: 3.1,   speed: 0.10, opacity: 0.10, lineWidth: 0.8, rotSpeed: -0.003, type: 'circle',  color: 1 },
+    { x: 0.45, y: 0.78, baseR: 20,  growFactor: 90,  phase: 1.7,   speed: 0.20, opacity: 0.14, lineWidth: 1,   rotSpeed: 0.005,  type: 'squiggle',color: 0 },
+
+    // STUDIO - violet, architectural
+    { x: 0.75, y: 0.25, baseR: 60,  growFactor: 250, phase: 0.4,   speed: 0.08, opacity: 0.12, lineWidth: 0.7, rotSpeed: 0.0015, type: 'circle',  color: 0 },
+    { x: 0.20, y: 0.60, baseR: 35,  growFactor: 160, phase: 2.0,   speed: 0.13, opacity: 0.16, lineWidth: 1.2, rotSpeed: -0.002, type: 'arc',     color: 1 },
+    { x: 0.55, y: 0.90, baseR: 18,  growFactor: 80,  phase: 4.2,   speed: 0.25, opacity: 0.10, lineWidth: 1,   rotSpeed: 0.003,  type: 'cross',   color: 0 },
+
+    // CONTACT - calm, flowing
+    { x: 0.30, y: 0.20, baseR: 45,  growFactor: 190, phase: 1.5,   speed: 0.09, opacity: 0.13, lineWidth: 0.9, rotSpeed: 0.002,  type: 'blob',    color: 0 },
+    { x: 0.80, y: 0.70, baseR: 28,  growFactor: 130, phase: 0.7,   speed: 0.16, opacity: 0.11, lineWidth: 1,   rotSpeed: -0.001, type: 'squiggle',color: 1 },
+  ];
+
+  // ── Lerp helper ─────────────────────────────────────────
+  function lerp(a: number, b: number, t: number) {
+    return a + (b - a) * t;
+  }
+
+  function lerpColor(c1: number[], c2: number[], t: number) {
+    return c1.map((v, i) => Math.round(lerp(v, c2[i], t)));
+  }
+
+  // Smooth easing
+  function easeInOut(t: number) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  // ── Main state ───────────────────────────────────────────
+  let time = 0;
+  let currentSceneFloat = 0; // float that blends between scenes
+
+  // ── Draw squiggle (wavy line) ────────────────────────────
+  function drawSquiggle(
+    x: number, y: number, radius: number,
+    rotation: number, alpha: number, lineW: number,
+    r: number, g: number, b: number
+  ) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = lineW;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    const steps = 32;
+    for (let i = 0; i <= steps; i++) {
+      const t2 = (i / steps) * Math.PI * 2;
+      const wave = Math.sin(t2 * 3 + time * 0.5) * radius * 0.3;
+      const px = Math.cos(t2) * radius + wave;
+      const py = Math.sin(t2) * radius * 0.4;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Draw organic blob ────────────────────────────────────
+  function drawBlob(
+    x: number, y: number, radius: number,
+    rotation: number, alpha: number, lineW: number,
+    r: number, g: number, b: number
+  ) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = lineW;
+    ctx.beginPath();
+    const pts = 8;
+    const angleStep = (Math.PI * 2) / pts;
+    for (let i = 0; i <= pts; i++) {
+      const angle = i * angleStep;
+      const noise = Math.sin(i * 2.3 + time * 0.3) * radius * 0.22
+                  + Math.cos(i * 1.7 + time * 0.2) * radius * 0.12;
+      const rx = Math.cos(angle) * (radius + noise);
+      const ry = Math.sin(angle) * (radius + noise) * 0.85;
+      i === 0 ? ctx.moveTo(rx, ry) : ctx.lineTo(rx, ry);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Draw cross ───────────────────────────────────────────
+  function drawCross(
+    x: number, y: number, radius: number,
+    rotation: number, alpha: number, lineW: number,
+    r: number, g: number, b: number
+  ) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation + time * 0.1);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = lineW;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-radius, 0); ctx.lineTo(radius, 0);
+    ctx.moveTo(0, -radius); ctx.lineTo(0, radius);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Draw arc ─────────────────────────────────────────────
+  function drawArc(
+    x: number, y: number, radius: number,
+    rotation: number, alpha: number, lineW: number,
+    r: number, g: number, b: number
+  ) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = lineW;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0.2 + time * 0.05, Math.PI * 1.4 + time * 0.05);
+    ctx.stroke();
+    // inner concentric
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.6, Math.PI * 0.3, Math.PI * 1.8);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Draw circle ──────────────────────────────────────────
+  function drawCircle(
+    x: number, y: number, radius: number,
+    rotation: number, alpha: number, lineW: number,
+    r: number, g: number, b: number
+  ) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = lineW;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    // second ring
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 1.35, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Rotation accumulator per shape ──────────────────────
+  const rotations = shapes.map(() => 0);
+
+  // ── Scene index from scroll ──────────────────────────────
+  // Each section occupies 1/4 of total scroll
+  function getSceneFloat() {
+    const sp = scrollProgress; // 0..1
+    return sp * (scenes.length - 1);
+  }
+
+  // ── Background gradient draw ─────────────────────────────
+  function drawBackground(sf: number) {
+    const sceneA = Math.floor(sf);
+    const sceneB = Math.min(sceneA + 1, scenes.length - 1);
+    const t = easeInOut(sf - sceneA);
+
+    const bg   = lerpColor(scenes[sceneA].bg, scenes[sceneB].bg, t);
+    const alpha1 = 0.92; // canvas bg alpha — slightly transparent so page bg shows through
+    ctx.globalAlpha = alpha1;
+    ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Render loop ──────────────────────────────────────────
+  function render() {
+    time += 0.016;
+    currentSceneFloat = getSceneFloat();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(currentSceneFloat);
+
+    const sceneA = Math.floor(currentSceneFloat);
+    const sceneB = Math.min(sceneA + 1, scenes.length - 1);
+    const blendT = easeInOut(currentSceneFloat - sceneA);
+
+    // which shapes are active for this scene region
+    // 3 shapes per scene, indexed 0-2, 3-5, 6-8, 9-11
+    // We blend between the two adjacent scene groups
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    shapes.forEach((s, idx) => {
+      // Which scene does this shape belong to (every 3 shapes = 1 scene)
+      const shapeScene = Math.floor(idx / 3);
+
+      // Fade in/out based on proximity of sceneFloat to this shape's scene
+      const sceneDist = Math.abs(currentSceneFloat - shapeScene);
+      const fadeRadius = 1.2;
+      if (sceneDist > fadeRadius) return;
+
+      const fadeT = 1 - (sceneDist / fadeRadius);
+      const eased = easeInOut(fadeT);
+
+      // Shape scale grows with scroll progress within its scene
+      const localT = Math.max(0, Math.min(1, 1 - sceneDist));
+      const radius = s.baseR + s.growFactor * eased * localT;
+
+      // Drift position over time
+      const drift = Math.sin(time * s.speed + s.phase) * 14;
+      const driftY = Math.cos(time * s.speed * 0.7 + s.phase) * 10;
+
+      const px = s.x * W + drift;
+      const py = s.y * H + driftY;
+
+      // Color: blend between scene's accent1 & accent2
+      const sIdx = Math.min(shapeScene, scenes.length - 1);
+      const cA = lerpColor(scenes[sIdx].accent1, scenes[sIdx].accent2, s.color);
+      const [r, g, b] = cA;
+
+      const alpha = s.opacity * eased;
+      rotations[idx] += s.rotSpeed;
+      const rot = rotations[idx];
+
+      switch (s.type) {
+        case 'circle':   drawCircle(px, py, radius, rot, alpha, s.lineWidth, r, g, b); break;
+        case 'squiggle': drawSquiggle(px, py, radius, rot, alpha, s.lineWidth, r, g, b); break;
+        case 'blob':     drawBlob(px, py, radius, rot, alpha, s.lineWidth, r, g, b); break;
+        case 'cross':    drawCross(px, py, radius, rot, alpha, s.lineWidth, r, g, b); break;
+        case 'arc':      drawArc(px, py, radius, rot, alpha, s.lineWidth, r, g, b); break;
+      }
+    });
+
+    // Ambient glow spots per scene
+    drawGlows(currentSceneFloat, sceneA, sceneB, blendT);
+
+    requestAnimationFrame(render);
+  }
+
+  function drawGlows(sf: number, sA: number, sB: number, t: number) {
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // Each scene has two ambient glow positions
+    const glowDefs = [
+      // hero
+      [{ x: 0.75, y: 0.2, r: 380, c: [255,255,255], a: 0.025 },
+       { x: 0.15, y: 0.8, r: 280, c: [200,200,200], a: 0.018 }],
+      // services
+      [{ x: 0.1, y: 0.3, r: 450, c: [255,255,255], a: 0.03 },
+       { x: 0.85, y: 0.65, r: 320, c: [180,180,180], a: 0.022 }],
+      // studio
+      [{ x: 0.8, y: 0.15, r: 400, c: [255,255,255], a: 0.028 },
+       { x: 0.25, y: 0.75, r: 350, c: [160,160,160], a: 0.02 }],
+      // contact
+      [{ x: 0.4, y: 0.3, r: 420, c: [255,255,255], a: 0.025 },
+       { x: 0.7, y: 0.8, r: 300, c: [140,140,140], a: 0.018 }],
+    ];
+
+    const gA = glowDefs[Math.min(sA, glowDefs.length - 1)];
+    const gB = glowDefs[Math.min(sB, glowDefs.length - 1)];
+
+    gA.forEach((g, i) => {
+      const other = gB[i];
+      const x  = lerp(g.x, other.x, t) * W;
+      const y  = lerp(g.y, other.y, t) * H;
+      const radius = lerp(g.r, other.r, t);
+      const alpha  = lerp(g.a, other.a, t);
+      const col    = lerpColor(g.c as number[], other.c as number[], t);
+
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      grad.addColorStop(0,   `rgba(${col[0]},${col[1]},${col[2]},${alpha})`);
+      grad.addColorStop(1,   `rgba(${col[0]},${col[1]},${col[2]},0)`);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    });
+  }
+
+  // ── Scroll listener ──────────────────────────────────────
+  function updateScroll() {
+    const totalH = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProgress = totalH > 0 ? window.scrollY / totalH : 0;
+  }
+
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+
+  // ── Start ────────────────────────────────────────────────
+  render();
+</script>

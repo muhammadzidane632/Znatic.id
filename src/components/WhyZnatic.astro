@@ -1,0 +1,237 @@
+---
+// Why ZNATIC Section
+---
+
+<section id="why" class="section-pad why-section">
+  <div class="container-znatic">
+
+    <div class="section-header reveal">
+      <span class="eyebrow">Why ZNATIC</span>
+      <h2 class="section-title">
+        The standard we hold<br />
+        <em class="italic-accent">ourselves to.</em>
+      </h2>
+    </div>
+
+    <!-- Editorial statement — no box -->
+    <div class="why-statement reveal" style="transition-delay:80ms">
+      <div class="why-stmt-inner">
+        <h3 class="why-stmt-title">Obsessive Attention<br />to Detail</h3>
+        <p class="why-stmt-desc">
+          We scrutinize every pixel, every interaction, every line of copy. The difference
+          between good and exceptional lives entirely in the details — and we never stop
+          looking for opportunities to improve them.
+        </p>
+      </div>
+    </div>
+
+    <!-- Three principles — open columns, no cards -->
+    <div class="why-principles reveal-stagger">
+
+      <div class="why-principle">
+        <h3 class="wp-title">Performance-First</h3>
+        <p class="wp-desc">
+          Speed is a feature. We engineer for Lighthouse scores that reflect real-world
+          performance — fast load times, optimized assets, frictionless experience.
+        </p>
+      </div>
+
+      <div class="why-principle">
+        <h3 class="wp-title">Modern Workflow</h3>
+        <p class="wp-desc">
+          From async communication to structured delivery milestones, we
+          operate with the clarity and organization of a world-class team.
+        </p>
+      </div>
+
+      <div class="why-principle">
+        <h3 class="wp-title">Long-Term Mindset</h3>
+        <p class="wp-desc">
+          We build relationships alongside products. Our goal is not to close
+          a project — it's to become a trusted long-term partner for your brand.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Trust metrics — open row, no box -->
+    <div class="trust-row reveal" style="transition-delay:200ms">
+      <div class="trust-metric">
+        <span class="tm-num">100%</span>
+        <span class="tm-label">On-Time Delivery</span>
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-metric">
+        <span class="tm-num">NDA</span>
+        <span class="tm-label">Confidentiality Guaranteed</span>
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-metric">
+        <span class="tm-num">48h</span>
+        <span class="tm-label">Response Time</span>
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-metric">
+        <span class="tm-num">IP</span>
+        <span class="tm-label">Full Ownership Transfer</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .why-section {
+    background-color: var(--color-bg-soft);
+    border-top: 1px solid var(--color-border-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .section-header {
+    margin-bottom: 72px;
+    max-width: 640px;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--color-text-primary);
+    margin-top: 16px;
+  }
+
+  .italic-accent {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--color-gold);
+  }
+
+  /* Statement — editorial open block */
+  .why-statement {
+    margin-bottom: 80px;
+    padding-top: 48px;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .why-stmt-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .why-stmt-inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  .why-stmt-title {
+    font-size: clamp(1.625rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .why-stmt-desc {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.82;
+    padding-top: 8px;
+  }
+
+  /* Three principles — open columns */
+  .why-principles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--color-border-soft);
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 900px) {
+    .why-principles { grid-template-columns: 1fr; }
+  }
+
+  .why-principle {
+    padding: 40px 40px 40px 0;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  @media (min-width: 901px) {
+    .why-principle:not(:last-child) {
+      border-right: 1px solid var(--color-border-soft);
+      margin-right: 0;
+    }
+    .why-principle:not(:first-child) {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    .why-principle:last-child {
+      padding-left: 40px;
+      padding-right: 0;
+    }
+  }
+
+  .wp-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+
+  .wp-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+  }
+
+  /* Trust row — open, no box */
+  .trust-row {
+    border-top: 1px solid var(--color-border-soft);
+    padding-top: 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .trust-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 48px;
+  }
+
+  .trust-metric:last-child { padding-right: 0; }
+
+  .trust-sep {
+    width: 1px;
+    height: 44px;
+    background: var(--color-border-soft);
+    margin-right: 48px;
+    align-self: center;
+  }
+
+  @media (max-width: 640px) {
+    .trust-row { gap: 28px; flex-wrap: wrap; }
+    .trust-sep { display: none; }
+    .trust-metric { padding-right: 0; }
+  }
+
+  .tm-num {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .tm-label {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+</style>

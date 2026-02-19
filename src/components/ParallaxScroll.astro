@@ -1,0 +1,378 @@
+---
+// ParallaxScroll — GSAP ScrollTrigger element animations + Lenis smooth scroll
+---
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from 'lenis';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Lenis Smooth Scroll ─────────────────────────────────
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 0.9,
+    touchMultiplier: 2,
+  });
+
+  // Sync with GSAP ticker (single RAF source)
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  // ── Smooth anchor scroll ────────────────────────────────
+  document.addEventListener('click', (e) => {
+    const anchor = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;
+    if (!anchor) return;
+    e.preventDefault();
+    const id = anchor.getAttribute('href')?.slice(1);
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) lenis.scrollTo(el, { offset: -80, duration: 1.6 });
+  });
+
+  // ── After page is loaded ────────────────────────────────
+  window.addEventListener('load', () => {
+
+    // ── Section Background Color Transitions with Smooth Overlay ────────────────────────
+    const sections = [
+      { id: 'home', bgColor: '#000000', isDark: true },      // Hero - Black
+      { id: 'services', bgColor: '#FFFFFF', isDark: false }, // Services - White
+      { id: 'studio', bgColor: '#000000', isDark: true },    // Studio - Black
+      { id: 'contact', bgColor: '#FFFFFF', isDark: false },  // CTA - White
+    ];
+
+    sections.forEach((section, index) => {
+      const el = document.getElementById(section.id);
+      if (!el) return;
+
+      // Set initial background - ini warna ASLI section
+      el.style.backgroundColor = section.bgColor;
+      
+      if (section.isDark) {
+        el.classList.add('section-dark');
+        el.classList.remove('section-light');
+      } else {
+        el.classList.add('section-light');
+        el.classList.remove('section-dark');
+      }
+
+      // Create transition overlay FROM previous section
+      if (index > 0) {
+        const prevSection = sections[index - 1];
+        
+        // Create overlay div dengan warna section SEBELUMNYA
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.zIndex = '0';
+        overlay.style.backgroundColor = prevSection.bgColor; // Warna SEBELUMNYA
+        overlay.style.opacity = '1'; // Mulai dengan opacity 1
+        el.style.position = 'relative';
+        el.insertBefore(overlay, el.firstChild);
+
+        // Fade out overlay (reveal warna asli section) - lebih gradual
+        gsap.to(overlay, {
+          opacity: 0,
+          ease: 'power1.inOut',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            end: 'top 20%',
+            scrub: 3,
+          },
+        });
+
+        // Change text colors smoothly
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 70%',
+          end: 'top 30%',
+          onEnter: () => {
+            if (section.isDark) {
+              el.classList.add('section-dark');
+              el.classList.remove('section-light');
+            } else {
+              el.classList.add('section-light');
+              el.classList.remove('section-dark');
+            }
+          },
+          onLeaveBack: () => {
+            if (section.isDark) {
+              el.classList.remove('section-dark');
+              el.classList.add('section-light');
+            } else {
+              el.classList.remove('section-light');
+              el.classList.add('section-dark');
+            }
+          },
+        });
+      }
+    });
+
+    // ── Navbar hide/show on scroll direction (desktop only) ───────────────
+    const navbar = document.getElementById('navbar');
+    if (navbar && window.innerWidth > 768) {
+      ScrollTrigger.create({
+        start: 'top -100',
+        end: 99999,
+        onUpdate(self) {
+          if (self.direction === -1) {
+            gsap.to(navbar, { top: '28px', duration: 0.5, ease: 'power2.out', overwrite: true });
+          } else {
+            gsap.to(navbar, { top: '-120px', duration: 0.4, ease: 'power2.in', overwrite: true });
+          }
+        },
+      });
+    }
+
+    // ── Hero: elements float up on load ────────────────────
+    gsap.fromTo('.hero-eyebrow', { opacity: 0, y: 30 }, {
+      opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.1,
+    });
+    gsap.fromTo('.hero-headline', { opacity: 0, y: 50 }, {
+      opacity: 1, y: 0, duration: 1.3, ease: 'power3.out', delay: 0.25,
+    });
+    gsap.fromTo('.hero-description', { opacity: 0, y: 30 }, {
+      opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.45,
+    });
+    gsap.fromTo('.hero-ctas', { opacity: 0, y: 24 }, {
+      opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', delay: 0.6,
+    });
+    gsap.fromTo('.hero-stats', { opacity: 0, y: 20 }, {
+      opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', delay: 0.75,
+    });
+
+    // Hero content parallax-out on scroll
+    gsap.to('.hero-inner', {
+      y: -120,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#home',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5,
+      },
+    });
+
+    // ── Services: header ──────────────────────────────────
+    // Split text into words for animation
+    const splitTextIntoWords = (selector: string) => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach((el) => {
+        const text = el.textContent || '';
+        const words = text.split(' ');
+        el.innerHTML = words.map(word => `<span class="word-reveal">${word}</span>`).join(' ');
+      });
+    };
+
+    splitTextIntoWords('.svc-heading, .cta-headline');
+
+    gsap.fromTo('.svc-header-left', { opacity: 0, x: -60 }, {
+      opacity: 1, x: 0,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.svc-header',
+        start: 'top 82%',
+        end: 'top 50%',
+        scrub: 1.2,
+      },
+    });
+
+    // Animate words
+    document.querySelectorAll('.svc-heading, .cta-headline').forEach((heading) => {
+      const words = heading.querySelectorAll('.word-reveal');
+      gsap.fromTo(words,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: heading,
+            start: 'top 85%',
+            end: 'top 60%',
+            scrub: 1,
+          },
+        }
+      );
+    });
+
+    gsap.fromTo('.svc-header-right', { opacity: 0, x: 60 }, {
+      opacity: 1, x: 0,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.svc-header',
+        start: 'top 82%',
+        end: 'top 50%',
+        scrub: 1.2,
+      },
+    });
+
+    // Service rows — stagger slide-in
+    gsap.utils.toArray('.svc-row').forEach((row) => {
+      gsap.fromTo(row,
+        { opacity: 0, x: -40, y: 20 },
+        {
+          opacity: 1, x: 0, y: 0,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row as Element,
+            start: 'top 88%',
+            end: 'top 62%',
+            scrub: 1,
+          },
+        }
+      );
+    });
+
+    // ── Studio: split parallax ────────────────────────────
+    gsap.fromTo('.studio-editorial',
+      { opacity: 0, y: 80 },
+      {
+        opacity: 1, y: 0,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.studio-section',
+          start: 'top 78%',
+          end: 'top 40%',
+          scrub: 1.5,
+        },
+      }
+    );
+
+    gsap.fromTo('.studio-philosophy',
+      { opacity: 0, y: 120 },
+      {
+        opacity: 1, y: 0,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.studio-section',
+          start: 'top 75%',
+          end: 'top 35%',
+          scrub: 1.8,
+        },
+      }
+    );
+
+    gsap.utils.toArray('.phil-row').forEach((row) => {
+      gsap.fromTo(row,
+        { opacity: 0, x: 60 },
+        {
+          opacity: 1, x: 0,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row as Element,
+            start: 'top 88%',
+            end: 'top 58%',
+            scrub: 1.2,
+          },
+        }
+      );
+    });
+
+    // ── CTA section ───────────────────────────────────────
+    gsap.fromTo('.cta-left',
+      { opacity: 0, y: 60 },
+      {
+        opacity: 1, y: 0,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.cta-section',
+          start: 'top 78%',
+          end: 'top 45%',
+          scrub: 1.5,
+        },
+      }
+    );
+    gsap.fromTo('.cta-right',
+      { opacity: 0, y: 80 },
+      {
+        opacity: 1, y: 0,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.cta-section',
+          start: 'top 75%',
+          end: 'top 40%',
+          scrub: 1.8,
+        },
+      }
+    );
+    gsap.utils.toArray('.cta-row').forEach((row) => {
+      gsap.fromTo(row,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1, y: 0,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row as Element,
+            start: 'top 90%',
+            end: 'top 68%',
+            scrub: 1,
+          },
+        }
+      );
+    });
+
+    // ── Footer ────────────────────────────────────────────
+    gsap.fromTo('.footer',
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.footer',
+          start: 'top 90%',
+          end: 'top 65%',
+          scrub: 1.2,
+        },
+      }
+    );
+
+    // ── Mouse parallax on hero (3D tilt effect) ──────────────────
+    if (document.querySelector('.hero-section')) {
+      const heroSection = document.querySelector('.hero-section') as HTMLElement;
+      let tx = 0, ty = 0;
+      let cx = 0, cy = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        if (window.scrollY < window.innerHeight) {
+          tx = ((e.clientX - rect.left) / rect.width  - 0.5) * 24;
+          ty = ((e.clientY - rect.top) / rect.height - 0.5) * 16;
+        }
+      });
+
+      gsap.ticker.add(() => {
+        if (window.scrollY > window.innerHeight) return;
+        cx += (tx - cx) * 0.08;
+        cy += (ty - cy) * 0.08;
+        
+        // 3D tilt effect on hero content
+        gsap.set('.hero-inner', { 
+          rotationY: cx * 0.3,
+          rotationX: -cy * 0.3,
+          transformPerspective: 1000,
+        });
+        
+        // Parallax on different elements
+        gsap.set('.hero-headline',    { x: cx * 1.2,  y: cy * 1.2 });
+        gsap.set('.hero-description', { x: cx * 0.6, y: cy * 0.6 });
+        gsap.set('.hero-ctas',        { x: cx * 0.4, y: cy * 0.4 });
+      });
+    }
+
+    ScrollTrigger.refresh();
+  });
+</script>

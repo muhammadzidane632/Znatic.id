@@ -1,0 +1,515 @@
+---
+// Navbar — Centered Liquid Glass Floating Pill
+---
+
+<header id="navbar" class="navbar-root">
+  <nav class="navbar-pill" role="navigation" aria-label="Main navigation">
+
+    <!-- Logo -->
+    <a href="#home" class="navbar-logo" aria-label="ZNATIC Home" data-scroll="home">
+      <img src="/logo_znatic.svg" alt="ZNATIC" width="220" height="56" />
+    </a>
+
+    <!-- Center links (desktop) -->
+    <ul class="navbar-links" role="list">
+      <li><a href="#home"     class="nav-link" data-section="home">Home</a></li>
+      <li><a href="#services" class="nav-link" data-section="services">Services</a></li>
+      <li><a href="#studio"   class="nav-link" data-section="studio">Studio</a></li>
+      <li><a href="#contact"  class="nav-link" data-section="contact">Contact</a></li>
+    </ul>
+
+    <!-- CTA -->
+    <a href="#contact" class="navbar-cta btn-gold" data-scroll="contact">
+      Start a Project
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+    </button>
+
+  </nav>
+
+  <!-- Mobile dropdown -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <ul role="list">
+      <li><a href="#home"     class="mobile-link" data-section="home">Home</a></li>
+      <li><a href="#services" class="mobile-link" data-section="services">Services</a></li>
+      <li><a href="#studio"   class="mobile-link" data-section="studio">Studio</a></li>
+      <li><a href="#contact"  class="mobile-link" data-section="contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn-gold mobile-cta" data-scroll="contact">Start a Project</a>
+  </div>
+</header>
+
+<style>
+  /* ── Positioning wrapper ────────────────────────────── */
+  .navbar-root {
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: calc(100% - 48px);
+    max-width: 900px;
+    transition: top 0.4s var(--ease-apple);
+  }
+
+  /* ── Glass Pill ─────────────────────────────────────── */
+  .navbar-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 8px 12px 8px 22px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(16px) saturate(130%);
+    -webkit-backdrop-filter: blur(16px) saturate(130%);
+    border: 1px solid rgba(42, 42, 42, 0.7);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.28);
+    transition:
+      all 0.4s var(--ease-apple);
+  }
+
+  .navbar-root.scrolled .navbar-pill {
+    background: rgba(0, 0, 0, 0.93);
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.42);
+    border-color: rgba(42, 42, 42, 0.9);
+  }
+
+  /* ── Logo ───────────────────────────────────────────── */
+  .navbar-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-logo img {
+    height: auto;
+    width: auto;
+    max-height: 48px;
+    max-width: 100%;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    transition: opacity 0.25s;
+  }
+
+  .navbar-logo:hover img {
+    opacity: 0.65;
+  }
+
+  /* Adaptive logo — flips black when over a light section (desktop only) */
+  @media (min-width: 769px) {
+    .navbar-root.on-light .navbar-logo img {
+      filter: brightness(0);
+      opacity: 0.85;
+    }
+    .navbar-root.on-light .navbar-logo:hover img {
+      opacity: 0.55;
+    }
+    .navbar-root.on-light .navbar-pill {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(200, 200, 200, 0.5);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-root.on-light .nav-link {
+      color: rgba(0, 0, 0, 0.5);
+    }
+    .navbar-root.on-light .nav-link:hover,
+    .navbar-root.on-light .nav-link.active {
+      color: #000;
+    }
+  }
+
+  /* ── Desktop Links ──────────────────────────────────── */
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 8px 18px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+    transition: color 0.2s var(--ease-apple);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .nav-link.active {
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  /* ── CTA ────────────────────────────────────────────── */
+  .navbar-cta {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    padding: 9px 20px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* ── Hamburger ──────────────────────────────────────── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: opacity 0.2s;
+  }
+
+  .hamburger:hover { opacity: 0.7; }
+
+  .ham-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--color-text-secondary);
+    border-radius: 2px;
+    transition: transform 0.3s var(--ease-apple), opacity 0.3s;
+  }
+
+  .hamburger.open .ham-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .hamburger.open .ham-line:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.open .ham-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ── Mobile Menu ────────────────────────────────────── */
+  .mobile-menu {
+    display: none;
+    margin-top: 6px;
+    padding: 24px 28px;
+    border-radius: 16px;
+    background: rgba(11, 13, 18, 0.97);
+    backdrop-filter: blur(20px) saturate(130%);
+    -webkit-backdrop-filter: blur(20px) saturate(130%);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition:
+      opacity 0.28s var(--ease-apple),
+      transform 0.28s var(--ease-apple);
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .mobile-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 20px;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: 13px 0;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid rgba(37, 37, 37, 0.6);
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .mobile-link:last-of-type {
+    border-bottom: none;
+  }
+
+  .mobile-link:hover, .mobile-link.active {
+    color: var(--color-gold);
+  }
+
+  .mobile-cta {
+    width: 100%;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    padding: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Mobile Responsive ──────────────────────────────── */
+
+  /* ≤ 768px: Floating rounded pill — same vibe as desktop */
+  @media (max-width: 768px) {
+    .navbar-root {
+      width: calc(100% - 32px);
+      max-width: 480px;
+      left: 50%;
+      top: 16px;
+      transform: translateX(-50%);
+      height: auto;
+      overflow: visible;
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
+    }
+
+    /* Pill carries its own background */
+    .navbar-pill {
+      height: 52px;
+      padding: 0 8px 0 18px;
+      border-radius: 100px;
+      gap: 0;
+      background: rgba(10, 10, 12, 0.88);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(60, 60, 60, 0.55);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar-root.scrolled .navbar-pill {
+      background: rgba(5, 5, 7, 0.95);
+      box-shadow: 0 6px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Logo clearly visible */
+    .navbar-logo img {
+      height: 34px;
+      max-height: 34px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 1;
+    }
+
+    /* Hide desktop nav */
+    .navbar-links,
+    .navbar-cta {
+      display: none;
+    }
+
+    /* Hamburger: rounded button with subtle border */
+    .hamburger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .hamburger:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+      opacity: 1;
+    }
+
+    .ham-line {
+      background-color: rgba(255, 255, 255, 0.9);
+      width: 18px;
+    }
+
+    /* Mobile dropdown: absolute, drops below pill */
+    .mobile-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      display: block;
+      margin-top: 0;
+      border-radius: 16px;
+      background: rgba(10, 10, 12, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(60, 60, 60, 0.5);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+      padding: 8px 20px 20px;
+      opacity: 0;
+      transform: translateY(-8px) scale(0.98);
+      pointer-events: none;
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .mobile-menu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Mobile nav items */
+    .mobile-menu ul {
+      margin-bottom: 14px;
+    }
+
+    .mobile-link {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      border-bottom: 1px solid rgba(50, 50, 50, 0.6);
+    }
+
+    .mobile-cta {
+      width: 100%;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      padding: 13px 16px;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  /* ≤ 480px: Extra-small screens */
+  @media (max-width: 480px) {
+    .navbar-root {
+      width: calc(100% - 24px);
+    }
+  }
+</style>
+
+<script>
+  // ── Smooth scroll ──────────────────────────────────────
+  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const DURATION = 900;
+
+  function smoothScrollTo(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    let start: number | null = null;
+
+    function easeOutQuint(t: number) {
+      return 1 - Math.pow(1 - t, 5);
+    }
+
+    function step(timestamp: number) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      const progress = Math.min(elapsed / DURATION, 1);
+      const eased = easeOutQuint(progress);
+      window.scrollTo(0, startY + distance * eased);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  // Attach to all nav links
+  document.querySelectorAll<HTMLAnchorElement>('.nav-link, .mobile-link, [data-scroll], .navbar-logo').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href') || '#home';
+      const section = href.replace('#', '');
+      smoothScrollTo(section);
+      // Close mobile menu
+      closeMobileMenu();
+    });
+  });
+
+  // Also handle btn-gold CTA inside navbar
+  document.querySelectorAll<HTMLAnchorElement>('.navbar-cta, .mobile-cta').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      smoothScrollTo('contact');
+      closeMobileMenu();
+    });
+  });
+
+  // ── Hamburger ─────────────────────────────────────────
+  const hamburger = document.getElementById('hamburger') as HTMLButtonElement;
+  const mobileMenu = document.getElementById('mobile-menu') as HTMLDivElement;
+
+  function closeMobileMenu() {
+    hamburger?.classList.remove('open');
+    mobileMenu?.classList.remove('open');
+    hamburger?.setAttribute('aria-expanded', 'false');
+    mobileMenu?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  hamburger?.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+    mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    // Lock scroll when menu is open
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close menu on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeMobileMenu();
+  });
+
+  // ── Scroll: opaque + active section ──────────────────
+  const navbar = document.getElementById('navbar') as HTMLElement;
+  const sections = ['home', 'services', 'studio', 'contact'];
+
+  function updateNavbar() {
+    // Scrolled state
+    if (window.scrollY > 40) {
+      navbar?.classList.add('scrolled');
+    } else {
+      navbar?.classList.remove('scrolled');
+    }
+
+    // Active section
+    let currentSection = 'home';
+    const trigger = window.innerHeight * 0.45;
+
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= trigger && rect.bottom > trigger) {
+        currentSection = id;
+        break;
+      }
+    }
+
+    document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
+      const section = link.getAttribute('data-section');
+      link.classList.toggle('active', section === currentSection);
+    });
+
+    // Adaptive logo: light pill over light sections
+    const lightSections = ['services', 'contact'];
+    navbar.classList.toggle('on-light', lightSections.includes(currentSection));
+  }
+
+  window.addEventListener('scroll', updateNavbar, { passive: true });
+  updateNavbar();
+</script>

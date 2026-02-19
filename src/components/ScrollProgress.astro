@@ -1,0 +1,45 @@
+---
+// Scroll Progress Indicator
+---
+
+<div class="scroll-progress-bar"></div>
+
+<style>
+  .scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #FFFFFF 0%, #A0A0A0 100%);
+    z-index: 9999;
+    transition: width 0.1s ease-out;
+  }
+
+  /* Dark mode indicator */
+  body.cursor-on-light .scroll-progress-bar {
+    background: linear-gradient(90deg, #000000 0%, #4A4A4A 100%);
+  }
+
+  body.cursor-on-dark .scroll-progress-bar {
+    background: linear-gradient(90deg, #FFFFFF 0%, #A0A0A0 100%);
+  }
+</style>
+
+<script>
+  function updateScrollProgress() {
+    const scrollProgress = document.querySelector('.scroll-progress-bar') as HTMLElement;
+    if (!scrollProgress) return;
+
+    const updateProgress = () => {
+      const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = (window.scrollY / windowHeight) * 100;
+      scrollProgress.style.width = `${Math.min(scrolled, 100)}%`;
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+
+  window.addEventListener('load', updateScrollProgress);
+</script>

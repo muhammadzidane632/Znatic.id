@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import ParallaxScroll from '../components/ParallaxScroll.astro';
+import MagneticButtons from '../components/MagneticButtons.astro';
+import CustomCursor from '../components/CustomCursor.astro';
+import SceneCanvas from '../components/SceneCanvas.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import PageLoader from '../components/PageLoader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'ZNATIC — Where Craft Meets Code',
+  description = 'ZNATIC is a premium digital studio specializing in UI/UX design, web development, product design, and digital experiences.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0B0D12" />
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <!-- Preconnect for system fonts (optional) -->
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  </head>
+  <body>
+    <PageLoader />
+    <ScrollProgress />
+    <SceneCanvas />
+    <CustomCursor />
+    <slot />
+    <ParallaxScroll />
+    <MagneticButtons />
+
+    <!-- ── Skeleton fade out ── -->
+    <script>
+      window.addEventListener('load', () => {
+        const skeletons = document.querySelectorAll<HTMLElement>('#services-skeleton');
+        setTimeout(() => {
+          skeletons.forEach(el => {
+            el.style.transition = 'opacity 0.5s ease';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+            setTimeout(() => { el.style.display = 'none'; }, 500);
+          });
+        }, 400);
+      });
+    </script>
+  </body>
+</html>

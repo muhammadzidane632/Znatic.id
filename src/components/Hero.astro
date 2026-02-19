@@ -1,0 +1,449 @@
+---
+// Hero — Full-screen centered
+---
+
+<section id="home" class="hero-section grid-bg">
+  <div class="hero-noise" data-speed="0.5"></div>
+
+  <div class="container-znatic hero-inner">
+
+    <!-- Eyebrow -->
+    <div class="hero-eyebrow reveal">
+      <span class="eyebrow">Digital Agency</span>
+      <span class="hero-eyebrow-line"></span>
+      <span class="hero-eyebrow-tag">Est. 2025</span>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="hero-headline reveal" style="transition-delay: 80ms">
+      <span class="h-light">We craft</span><br />
+      <em class="hero-em">exceptional</em><br />
+      <span class="h-strong">digital products.</span>
+    </h1>
+
+    <!-- Description -->
+    <p class="hero-description reveal" style="transition-delay: 160ms">
+      ZNATIC is a premium digital studio specializing in design, development,
+      and digital experiences that define brands and move markets.
+    </p>
+
+    <!-- CTAs -->
+    <div class="hero-ctas reveal" style="transition-delay: 240ms">
+      <a href="#contact" class="btn-gold hero-btn-primary" data-scroll="contact">
+        Start a Project
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#services" class="btn-ghost hero-btn-secondary" data-scroll="services">
+        Our Services
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="hero-stats reveal" style="transition-delay: 320ms">
+      <div class="hero-stat">
+        <div class="hero-stat-row">
+          <span class="hero-stat-num" data-count="40">0</span>
+          <span class="hero-stat-plus">+</span>
+        </div>
+        <span class="hero-stat-label">Projects Delivered</span>
+      </div>
+      <div class="hero-stat-div"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-row">
+          <span class="hero-stat-num" data-count="100">0</span>
+          <span class="hero-stat-plus">%</span>
+        </div>
+        <span class="hero-stat-label">Client Satisfaction</span>
+      </div>
+      <div class="hero-stat-div"></div>
+      <div class="hero-stat hero-stat-badge">
+        <span class="hero-available-dot"></span>
+        <span class="hero-available-text">Accepting Projects</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-scroll-hint" aria-hidden="true" data-speed="0.8">
+    <div class="scroll-mouse">
+      <div class="scroll-dot"></div>
+    </div>
+    <span>Scroll</span>
+  </div>
+
+  <!-- Bottom gradient fade -->
+  <div class="hero-fade-bottom" data-speed="0.3"></div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 120px;
+    padding-bottom: 80px;
+    background-color: #000000;
+    transition: background-color 0.8s ease;
+  }
+
+  /* Noise texture overlay */
+  .hero-noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* Eyebrow row */
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow-line {
+    display: block;
+    width: 32px;
+    height: 1px;
+    background-color: var(--color-primary);
+    opacity: 0.45;
+  }
+
+  .hero-eyebrow-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  /* Headline */
+  .hero-headline {
+    font-size: clamp(3.25rem, 8.5vw, 7.5rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    max-width: 13ch;
+  }
+
+  .h-light {
+    font-weight: 300;
+    color: var(--color-text-secondary);
+    letter-spacing: -0.015em;
+  }
+
+  .h-strong {
+    font-weight: 700;
+  }
+
+  .hero-em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
+  }
+
+  /* Description */
+  .hero-description {
+    font-size: clamp(0.9375rem, 1.35vw, 1.05rem);
+    color: var(--color-text-secondary);
+    max-width: 40ch;
+    line-height: 1.85;
+    font-weight: 400;
+  }
+
+  /* CTAs */
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Stats */
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border-soft);
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .hero-stat-row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1px;
+  }
+
+  .hero-stat-badge {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-available-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 6px rgba(74, 222, 128, 0.7);
+    animation: pulse-green 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 4px rgba(74, 222, 128, 0.5); }
+    50% { box-shadow: 0 0 10px rgba(74, 222, 128, 0.9); }
+  }
+
+  .hero-available-text {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .hero-stat-num {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    display: inline-block;
+    min-width: 1.5ch;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero-stat-plus {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    display: inline;
+  }
+
+  .hero-stat-label {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .hero-stat-div {
+    width: 1px;
+    height: 28px;
+    background-color: var(--color-border);
+  }
+
+  /* Scroll hint */
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+    animation: fadeInUp 1s var(--ease-apple) 1.2s both;
+  }
+
+  .hero-scroll-hint span {
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .scroll-mouse {
+    width: 22px;
+    height: 34px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 6px;
+  }
+
+  @keyframes scrollDot {
+    0%   { opacity: 1; transform: translateY(0); }
+    80%  { opacity: 0; transform: translateY(12px); }
+    100% { opacity: 0; transform: translateY(12px); }
+  }
+
+  .scroll-dot {
+    width: 3px;
+    height: 6px;
+    background-color: var(--color-text-muted);
+    border-radius: 2px;
+    animation: scrollDot 2s var(--ease-apple) infinite;
+  }
+
+  /* Bottom gradient */
+  .hero-fade-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .hero-section {
+      min-height: auto;
+      padding-top: 100px;
+      padding-bottom: 56px;
+      align-items: flex-start;
+    }
+
+    .hero-inner {
+      gap: 24px;
+    }
+
+    .hero-description {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-section {
+      min-height: auto;
+      padding-top: 80px;
+      padding-bottom: 48px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .hero-inner {
+      gap: 20px;
+    }
+
+    .hero-stat-div { display: none; }
+
+    .hero-stats {
+      gap: 20px;
+      padding-top: 4px;
+    }
+
+    .hero-scroll-hint {
+      display: none;
+    }
+
+    .hero-ctas {
+      gap: 10px;
+    }
+  }
+</style>
+
+<script>
+  // Hero CTAs smooth scroll
+  document.querySelectorAll<HTMLAnchorElement>('.hero-btn-primary, .hero-btn-secondary').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = btn.getAttribute('href')?.replace('#', '') || 'contact';
+      const el = document.getElementById(target);
+      if (!el) return;
+      const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      let start: number | null = null;
+
+      function easeOutQuint(t: number) { return 1 - Math.pow(1 - t, 5); }
+
+      function step(ts: number) {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / 900, 1);
+        window.scrollTo(0, startY + distance * easeOutQuint(p));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  });
+
+  // Hero sections are visible by default (not reveal-hidden)
+  document.querySelectorAll<HTMLElement>('.hero-section .reveal').forEach((el, i) => {
+    setTimeout(() => {
+      el.classList.add('is-visible');
+    }, i * 80 + 50);
+  });
+
+  // Counter animation for stats
+  const counters = document.querySelectorAll('.hero-stat-num');
+  const animateCounter = (el: HTMLElement) => {
+    const target = parseInt(el.getAttribute('data-count') || '0');
+    const duration = 2000;
+    const start = performance.now();
+    
+    const update = (currentTime: number) => {
+      const elapsed = currentTime - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(easeOut * target);
+      el.textContent = current.toString();
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toString();
+      }
+    };
+    
+    requestAnimationFrame(update);
+  };
+
+  // Trigger counter when stats are visible
+  const statsSection = document.querySelector('.hero-stats');
+  if (statsSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          counters.forEach((counter) => animateCounter(counter as HTMLElement));
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    observer.observe(statsSection);
+  }
+
+</script>
