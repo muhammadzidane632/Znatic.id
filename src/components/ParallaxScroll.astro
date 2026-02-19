@@ -9,22 +9,25 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // ── Lenis Smooth Scroll ─────────────────────────────────
-  const lenis = new Lenis({
-    duration: 1.4,
-    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    orientation: 'vertical',
-    smoothWheel: true,
-    wheelMultiplier: 0.9,
-    touchMultiplier: 2,
-  });
+  // ── Lenis Smooth Scroll (desktop only) ─────────────────
+  const isMobileDevice = window.innerWidth <= 768;
+  let lenis: any = null;
 
-  // Sync with GSAP ticker (single RAF source)
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
-  lenis.on('scroll', ScrollTrigger.update);
+  if (!isMobileDevice) {
+    lenis = new Lenis({
+      duration: 1.4,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 2,
+    });
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+    lenis.on('scroll', ScrollTrigger.update);
+  }
 
   // ── Smooth anchor scroll ────────────────────────────────
   document.addEventListener('click', (e) => {
@@ -34,7 +37,12 @@
     const id = anchor.getAttribute('href')?.slice(1);
     if (!id) return;
     const el = document.getElementById(id);
-    if (el) lenis.scrollTo(el, { offset: -80, duration: 1.6 });
+    if (!el) return;
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -80, duration: 1.6 });
+    } else {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 
   // ── After page is loaded ────────────────────────────────
@@ -52,9 +60,7 @@
       const el = document.getElementById(section.id);
       if (!el) return;
 
-      // Set initial background - ini warna ASLI section
-      el.style.backgroundColor = section.bgColor;
-      
+      // Classes already set in HTML, but enforce here too
       if (section.isDark) {
         el.classList.add('section-dark');
         el.classList.remove('section-light');
@@ -63,11 +69,9 @@
         el.classList.remove('section-dark');
       }
 
-      // Create transition overlay FROM previous section
+      // Create transition overlay FROM previous section (desktop only)
       if (index > 0) {
-        const isMobile = window.innerWidth <= 768;
-
-        if (!isMobile) {
+        if (!isMobileDevice) {
           // Desktop only: overlay fade transition
           const prevSection = sections[index - 1];
           const overlay = document.createElement('div');
@@ -138,7 +142,27 @@
       });
     }
 
-    // ── Hero: elements float up on load ────────────────────
+    // ── Skip heavy animations on mobile ──────────────────
+    if (isMobileDevice) {
+      // On mobile: just fade in hero elements immediately, no scroll-scrub
+      gsap.fromTo('.hero-eyebrow, .hero-headline, .hero-description, .hero-ctas, .hero-stats',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.1, delay: 0.1 }
+      );
+      // Reveal other sections simply on enter
+      gsap.utils.toArray('.svc-header-left, .svc-header-right, .svc-row, .studio-editorial, .studio-philosophy, .cta-left, .cta-right, .cta-row, .footer').forEach((el) => {
+        gsap.fromTo(el as Element,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+            scrollTrigger: { trigger: el as Element, start: 'top 92%', toggleActions: 'play none none none' }
+          }
+        );
+      });
+      ScrollTrigger.refresh();
+      return;
+    }
+
+    // ── Hero: elements float up on load (desktop) ─────────
     gsap.fromTo('.hero-eyebrow', { opacity: 0, y: 30 }, {
       opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.1,
     });
