@@ -543,6 +543,13 @@ footer {
   background-color: transparent;
 }
 
+/* Disable grid repaint entirely on mobile — no visual loss, big performance win */
+@media (max-width: 768px) {
+  .grid-bg {
+    background-image: none;
+  }
+}
+
 .grid-bg::before {
   content: '';
   position: absolute;

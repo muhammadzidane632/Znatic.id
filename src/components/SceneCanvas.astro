@@ -387,5 +387,9 @@
   updateScroll();
 
   // ── Start ────────────────────────────────────────────────
-  render();
+  // Don't start the RAF render loop on mobile — canvas is hidden anyway
+  // and the continuous loop wastes CPU/GPU on every frame
+  if (window.innerWidth > 768) {
+    render();
+  }
 </script>
