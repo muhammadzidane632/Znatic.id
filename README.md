@@ -1,1 +1,1 @@
-finals
+Minimal Astro Project With Modern UI
